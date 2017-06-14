@@ -1,0 +1,28 @@
+/*
+ * main.c
+ */
+int main(void) {
+	
+	return 0;
+}
+
+//n represents fibbinacci
+void blink(int n){
+
+}
+
+//Convert to morse code
+char convert_to_morse(int n){
+    switch(n){
+    case 1:
+        print("case 1");
+        break;
+    case 2:
+        printf("case 2");
+        break;
+
+    default:
+        break;
+
+    }
+}
