@@ -1,0 +1,46 @@
+TI ARM Assembler Unix v16.9.1 Wed Jun 14 11:55:04 2017
+
+Tools Copyright (c) 1996-2015 Texas Instruments Incorporated
+../fib.asm                                                           PAGE    1
+
+       1                    
+       2                    
+       3                     .global fib
+       4                    
+       5                    
+       6 00000000           fib:
+       7 00000000           case_zero:
+       8 00000000 2900              cmp r1, #0 ; [ORIG 16-BIT INS]
+       9 00000002 D002              beq case_one ; [ORIG 16-BIT INS]
+      10 00000004 0000F04F          mov r0, #0 ; [KEEP 32-BIT INS]
+      11 00000008 46F7              mov pc, lr ; [ORIG 16-BIT INS]
+      12                    
+      13 0000000a           case_one:
+      14 0000000a 2901              cmp r1, #1 ; [ORIG 16-BIT INS]
+      15 0000000c D002              beq fib_seq ; [ORIG 16-BIT INS]
+      16 0000000e 0001F04F          mov r0, #1 ; [KEEP 32-BIT INS]
+      17 00000012 46F7              mov pc, lr ; [ORIG 16-BIT INS]
+      18                    
+      19 00000014           fib_seq:
+      20 00000014 B401              push{r0} ; [ORIG 16-BIT INS]
+      21 00000016 0101F1A1          sub r1, r1, #1 ; [KEEP 32-BIT INS]
+      22 0000001a E7F1              b fib ; [ORIG 16-BIT INS]
+      23 0000001c BC08              pop{r3} ; [ORIG 16-BIT INS]
+      24                    
+      25 0000001e 0102F1A1          sub r1, r1, #2 ; [KEEP 32-BIT INS]
+      26 00000022 E7ED              b fib ; [ORIG 16-BIT INS]
+      27 00000024 BC10              pop{r4} ; [ORIG 16-BIT INS]
+      28 00000026 4423              add r3, r4 ; [ORIG 16-BIT INS]
+      29 00000028 46F7              mov pc, lr ; [ORIG 16-BIT INS]
+      30                    
+
+--------------------------
+Thumb2 Statistics
+--------------------------
+Number of Thumb2 ins converted to Thumb = 0 (0%)
+Number of Thumb ins in input = 12 (75%)
+Number of Thumb2 ins encoded as Thumb2 = 4 (100%)
+Number of Thumb2 ins converted to 2 OPND Thumb = 4
+
+
+No Assembly Errors, No Assembly Warnings
