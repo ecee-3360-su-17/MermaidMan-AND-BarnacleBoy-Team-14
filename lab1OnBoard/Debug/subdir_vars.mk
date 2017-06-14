@@ -6,8 +6,8 @@
 CMD_SRCS += \
 ../tm4c123gh6pm.cmd 
 
-S_UPPER_SRCS += \
-../fib.S 
+ASM_SRCS += \
+../fib.asm 
 
 C_SRCS += \
 ../main.c \
@@ -22,11 +22,8 @@ OBJS += \
 ./main.obj \
 ./tm4c123gh6pm_startup_ccs.obj 
 
-S_UPPER_DEPS += \
+ASM_DEPS += \
 ./fib.d 
-
-S_UPPER_DEPS__QUOTED += \
-"fib.d" 
 
 OBJS__QUOTED += \
 "fib.obj" \
@@ -37,8 +34,11 @@ C_DEPS__QUOTED += \
 "main.d" \
 "tm4c123gh6pm_startup_ccs.d" 
 
-S_UPPER_SRCS__QUOTED += \
-"../fib.S" 
+ASM_DEPS__QUOTED += \
+"fib.d" 
+
+ASM_SRCS__QUOTED += \
+"../fib.asm" 
 
 C_SRCS__QUOTED += \
 "../main.c" \
