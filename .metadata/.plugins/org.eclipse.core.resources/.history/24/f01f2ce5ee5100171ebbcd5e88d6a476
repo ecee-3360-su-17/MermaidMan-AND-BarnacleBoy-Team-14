@@ -1,0 +1,53 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CMD_SRCS += \
+../tm4c1230h6pm.cmd 
+
+ASM_SRCS += \
+../fib.asm 
+
+C_SRCS += \
+../main.c \
+../temp.c \
+../tm4c1230h6pm_startup_ccs.c 
+
+C_DEPS += \
+./main.d \
+./temp.d \
+./tm4c1230h6pm_startup_ccs.d 
+
+OBJS += \
+./fib.obj \
+./main.obj \
+./temp.obj \
+./tm4c1230h6pm_startup_ccs.obj 
+
+ASM_DEPS += \
+./fib.d 
+
+OBJS__QUOTED += \
+"fib.obj" \
+"main.obj" \
+"temp.obj" \
+"tm4c1230h6pm_startup_ccs.obj" 
+
+C_DEPS__QUOTED += \
+"main.d" \
+"temp.d" \
+"tm4c1230h6pm_startup_ccs.d" 
+
+ASM_DEPS__QUOTED += \
+"fib.d" 
+
+ASM_SRCS__QUOTED += \
+"../fib.asm" 
+
+C_SRCS__QUOTED += \
+"../main.c" \
+"../temp.c" \
+"../tm4c1230h6pm_startup_ccs.c" 
+
+

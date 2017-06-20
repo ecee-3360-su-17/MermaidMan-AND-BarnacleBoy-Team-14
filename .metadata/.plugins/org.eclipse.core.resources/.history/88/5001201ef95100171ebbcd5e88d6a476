@@ -1,0 +1,31 @@
+ 	.syntax unified
+ 	.cpu cortex-m0
+ 	.align	2
+ 	.global	fib
+ 	.thumb
+ 	.thumb_func
+ #asm_sum:
+  fib:
+  		push  	{r7, lr}
+  		sub	  	sp, sp, #8
+  		add	 	r7, sp, #0
+  		str   	r0, [r7, #4]
+  		cmp   	r0, #1
+        ble   	return
+
+  		subs  	r0, r0, #1
+  		//mov     r1, r0
+        bl 	 	fib
+  		push    {r0}           // fib(n-1)
+  		str   	r0, [r7, #4]   // r0 = n
+
+  		subs 	r0, r0, #2     //f(n-2)
+ 		bl 		fib
+ 		pop		{r1}
+  		adds     r0, r0,r1
+  		b return
+
+  return:
+  		mov		sp, r7
+  		add   	sp, sp, #8
+  		pop   	{r7, pc}

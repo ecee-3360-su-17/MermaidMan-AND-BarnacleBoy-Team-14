@@ -1,4 +1,4 @@
-TI ARM Assembler Unix v16.9.1 Wed Jun 14 11:55:04 2017
+TI ARM Assembler Unix v16.9.1 Thu Jun 15 10:35:20 2017
 
 Tools Copyright (c) 1996-2015 Texas Instruments Incorporated
 ../fib.asm                                                           PAGE    1
@@ -9,38 +9,48 @@ Tools Copyright (c) 1996-2015 Texas Instruments Incorporated
        4                    
        5                    
        6 00000000           fib:
-       7 00000000           case_zero:
-       8 00000000 2900              cmp r1, #0 ; [ORIG 16-BIT INS]
-       9 00000002 D002              beq case_one ; [ORIG 16-BIT INS]
-      10 00000004 0000F04F          mov r0, #0 ; [KEEP 32-BIT INS]
-      11 00000008 46F7              mov pc, lr ; [ORIG 16-BIT INS]
-      12                    
-      13 0000000a           case_one:
-      14 0000000a 2901              cmp r1, #1 ; [ORIG 16-BIT INS]
-      15 0000000c D002              beq fib_seq ; [ORIG 16-BIT INS]
-      16 0000000e 0001F04F          mov r0, #1 ; [KEEP 32-BIT INS]
-      17 00000012 46F7              mov pc, lr ; [ORIG 16-BIT INS]
-      18                    
-      19 00000014           fib_seq:
-      20 00000014 B401              push{r0} ; [ORIG 16-BIT INS]
-      21 00000016 0101F1A1          sub r1, r1, #1 ; [KEEP 32-BIT INS]
-      22 0000001a E7F1              b fib ; [ORIG 16-BIT INS]
-      23 0000001c BC08              pop{r3} ; [ORIG 16-BIT INS]
-      24                    
-      25 0000001e 0102F1A1          sub r1, r1, #2 ; [KEEP 32-BIT INS]
-      26 00000022 E7ED              b fib ; [ORIG 16-BIT INS]
-      27 00000024 BC10              pop{r4} ; [ORIG 16-BIT INS]
-      28 00000026 4423              add r3, r4 ; [ORIG 16-BIT INS]
-      29 00000028 46F7              mov pc, lr ; [ORIG 16-BIT INS]
-      30                    
+       7 00000000 B500              push {lr} ; [ORIG 16-BIT INS]
+       8 00000002           case_zero:
+       9 00000002 0F00EBB1          cmp r1, 0 ; [KEEP 32-BIT INS]
+ "../fib.asm", ERROR!   at line 9: [E0004] Invalid operand
+      10 00000006 D003              beq case_one ; [ORIG 16-BIT INS]
+      11 00000008 0000EA4F          mov r0, 0 ; [KEEP 32-BIT INS]
+ "../fib.asm", ERROR!   at line 11: [E0004] Invalid operand
+      12 0000000c 46F7              mov pc, lr ; [ORIG 16-BIT INS]
+      13 0000000e BD00              pop {pc} ; [ORIG 16-BIT INS]
+      14                    
+      15 00000010           case_one:
+      16 00000010 0F00EBB1          cmp r1, 1 ; [KEEP 32-BIT INS]
+ "../fib.asm", ERROR!   at line 16: [E0004] Invalid operand
+      17 00000014 D003              beq fib_seq ; [ORIG 16-BIT INS]
+      18 00000016 0000EA4F          mov r0, 1 ; [KEEP 32-BIT INS]
+ "../fib.asm", ERROR!   at line 18: [E0004] Invalid operand
+      19 0000001a 46F7              mov pc, lr ; [ORIG 16-BIT INS]
+      20 0000001c BD00              pop{pc} ; [ORIG 16-BIT INS]
+      21                    
+      22 0000001e           fib_seq:
+      23 0000001e B401              push{r0} ; [ORIG 16-BIT INS]
+      24 00000020 0000EBA0          sub r0, r0, 1 ; [KEEP 32-BIT INS]
+ "../fib.asm", ERROR!   at line 24: [E0004] Invalid operand
+      25 00000024 FFFEF7FF!         bl fib ; [KEEP 32-BIT INS]
+      26                    
+      27 00000028 4601              mov r1, r0 ; [ORIG 16-BIT INS]
+      28 0000002a BC01              pop{r0} ; [ORIG 16-BIT INS]
+      29 0000002c 0000EBA0          sub r0, r0, 2 ; [KEEP 32-BIT INS]
+ "../fib.asm", ERROR!   at line 29: [E0004] Invalid operand
+      30 00000030 FFFEF7FF!         bl fib ; [KEEP 32-BIT INS]
+      31                    
+      32 00000034 4408              add r0, r0, r1 ; [ORIG 16-BIT INS]
+      33 00000036 BD00              pop {pc} ; [ORIG 16-BIT INS]
+      34                    
 
 --------------------------
 Thumb2 Statistics
 --------------------------
 Number of Thumb2 ins converted to Thumb = 0 (0%)
-Number of Thumb ins in input = 12 (75%)
-Number of Thumb2 ins encoded as Thumb2 = 4 (100%)
-Number of Thumb2 ins converted to 2 OPND Thumb = 4
+Number of Thumb ins in input = 13 (61%)
+Number of Thumb2 ins encoded as Thumb2 = 8 (100%)
+Number of Thumb2 ins converted to 2 OPND Thumb = 3
 
 
-No Assembly Errors, No Assembly Warnings
+6 Assembly Errors, No Assembly Warnings
