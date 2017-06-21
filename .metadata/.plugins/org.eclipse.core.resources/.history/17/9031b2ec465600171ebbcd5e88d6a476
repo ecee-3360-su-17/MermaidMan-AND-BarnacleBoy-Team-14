@@ -1,28 +1,17 @@
-/*----------------------------------------------------
- *
- * University of Colorado, Boulder
- * Summer 2017
+/*
  * ECEN 3360 - Digital Design Lab
- *
- *----------------------------------------------------
  *
  * Bader Albader
  * Ahmed Algallaf
- *
- * ----------------------------------------------------
- *
- * Microcontroller:
- * Texas Instruments
- * Tiva C Series TM4C123G LaunchPad Evaluation Kit
- *
- *----------------------------------------------------
  *
  * Lab 1 - Represent fibonacci sequence as morse code
  * This is done using blinking LED's
  * Blue LED = 1 = Long
  * Red LED = 0 = Short
  *
- * ----------------------------------------------------
+ * Microcontroller:
+ * Texas Instruments
+ * Tiva C Series TM4C123G LaunchPad Evaluation Kit
  */
 
 
