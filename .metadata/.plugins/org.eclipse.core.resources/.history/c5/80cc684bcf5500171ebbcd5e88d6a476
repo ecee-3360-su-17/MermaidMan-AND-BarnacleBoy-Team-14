@@ -1,0 +1,27 @@
+
+ .global	fib
+
+
+fib:
+  		push  	{r7, lr}
+  		sub	  	sp, sp, #8
+  		add	 	r7, sp, #0
+  		str   	r0, [r7, #4]
+  		cmp   	r0, #1
+        ble   	return
+
+  		subs  	r0, r0, #1
+        bl 	 	fib
+  		push    {r0}
+  		str   	r0, [r7, #4]
+
+  		subs 	r0, r0, #2
+ 		bl 		fib
+ 		pop		{r1}
+  		adds     r0, r0,r1
+  		b return
+
+return:
+  		mov		sp, r7
+  		add   	sp, sp, #8
+  		pop   	{r7, pc}
