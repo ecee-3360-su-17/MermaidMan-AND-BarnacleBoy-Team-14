@@ -1,3 +1,19 @@
+/*
+ * ECEN 3360 - Digital Design Lab
+ *
+ * Bader Albader
+ * Ahmed Algallaf
+ *
+ * Lab 1 - Represent fibonacci sequence as morse code
+ * This is done using blinking LED's
+ * Blue LED = 1 = Long
+ * Red LED = 0 = Short
+ *
+ * Microcontroller:
+ * Texas Instruments
+ * Tiva C Series TM4C123G LaunchPad Evaluation Kit
+ */
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,176 +24,163 @@
 
 void blink(int n);
 char convert_to_morse(int n);
-
+int morse_to_led(int digits);
 extern int fib(int n);
 
-    int main(void) {
+int main(void) {
 
-    //int n;
-    volatile uint32_t ui32Loop;
+    int output_fib = 0;
 
-     // Enable the GPIO port that is used for the on-board LED.
-     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    // Enable the GPIO port that is used for the on-board LED.
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
-     // Check if the peripheral access is enabled.
-     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOF)){}
-
-
-     // Enable the GPIO pin for the LED .  Set the direction as output, and
-     // enable the GPIO pin for digital function.
-     GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1);        //RED LED
-     GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);        //BLUE LED
+    // Check if the peripheral access is enabled.
+    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOF)){}
 
 
-   while(1){
+    // Enable the GPIO pin for the LED .  Set the direction as output, and
+    // enable the GPIO pin for digital function.
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1);        //RED LED Represented as 0
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);        //BLUE LED Represented as 1
 
-       blink(fib(8));
 
-     }
-
+    while(1){
+        output_fib = fib(25);
+        blink(output_fib);
+    }
 
 }
 
 //n represents fib
 void blink(int n){
 
-    int i;
-    volatile uint32_t ui32Loop;
+    //--------------------------------------------------------------------------------------------------
+    //--------------------------------IF CONDITION FOR SINGLE DIGIT-----------------------------------
+    //--------------------------------------------------------------------------------------------------
+
+    if(n < 10){
+        int a = n%10;           //ones digit
+
+        morse_to_led(a);        //morse conversion of ones digit
+    }
+
+    /*------------------------------------------------------------------------------------------------
+    ---------------------------------IF CONDITION FOR DOUBLE DIGITS------------------------------------
+    --------------------------------------------------------------------------------------------------
+    ----Checks the state where the n value is double digits and treats them as 2 individual digits----
+    -------------------------------------------------------------------------------------------------*/
+
+    if(n >= 10 && n < 100){
+       int a = n%10;            //ones digit
+       int b = n/10;            //tens digit
+
+       morse_to_led(b);         //morse conversion of tens digit
+       morse_to_led(a);         //morse conversion of ones digit
+    }
+
+    /*------------------------------------------------------------------------------------------------
+    -----------------------------------IF CONDITION FOR TRIPLE DIGITS----------------------------------
+    --------------------------------------------------------------------------------------------------
+    ----Checks the state where the n value is triple digits and treats them as 3 individual digits----
+    -------------------------------------------------------------------------------------------------*/
+
+    if(n >= 100 && n < 1000){
+        int a = n%10;           //ones digit
+        int b = (n%100)/10;     //tens digit
+        int c = n/100;          //hundth digit
+
+        morse_to_led(c);        //morse conversion of hundredth digit
+        morse_to_led(b);        //morse conversion of tens digit
+        morse_to_led(a);        //morse conversion of ones digit
+
+    }
+
+    /*------------------------------------------------------------------------------------------------
+    ---------------------------------IF CONDITION FOR QUADRUPLE DIGITS---------------------------------
+    -------------------------------------------------------------------------------------------------*/
+
+    if(n >= 1000 && n < 10000){
+        int a = n%10;               //ones digit
+        int b = (n%100)/10;         //tens digit
+        int c = (n%1000)/100;       //hundth digit
+        int d = (n%10000)/1000;     //thousandth digit
+
+        morse_to_led(d);            //morse conversion of thousandth digit
+        morse_to_led(c);            //morse conversion of hundredth digit
+        morse_to_led(b);            //morse conversion of tens digit
+        morse_to_led(a);            //morse conversion of ones digit
+
+    }
+
+    /*------------------------------------------------------------------------------------------------
+    ---------------------------------IF CONDITION FOR QUINTUPLE DIGITS---------------------------------
+    -------------------------------------------------------------------------------------------------*/
+
+    if(n  >= 10000 && n < 100000){
+        int a = n%10;               //ones digit
+        int b = (n%100)/10;         //tens digit
+        int c = (n%1000)/100;       //hundth digit
+        int d = (n%10000)/1000;     //thousandth digit
+        int e = (n%100000)/10000;   //tens of thousandth digit
+
+        morse_to_led(e);            //morse conversion of tens of thousandth digit
+        morse_to_led(d);            //morse conversion of thousandth digit
+        morse_to_led(c);            //morse conversion of hundredth digit
+        morse_to_led(b);            //morse conversion of tens digit
+        morse_to_led(a);            //morse conversion of ones digit
+    }
+}
 
 
 /*------------------------------------------------------------------------------------------------
----------------------------------IF CONDITION FOR DOUBLE DIGIT------------------------------------
---------------------------------------------------------------------------------------------------
-----Checks the state where the n value is double digits and treats them as 2 individual digits----
+------------------------------FUNCTION THAT CONVRTS DIGIT LOACTION TO ----------------------------
+-------------------------------------------LED MORSE CODE-----------------------------------------
 -------------------------------------------------------------------------------------------------*/
 
-    if(n > 9 && n <= 99){
-        int a = n/10;   //tens digit
-        int b = n%10;   //ones digit
+int morse_to_led(int digits){
 
-        char pat_a = convert_to_morse(a);   //convert tens digit to morse
-        char pat_b = convert_to_morse(b);   //convert ones digit to morse
+    volatile uint32_t ui32Loop;
+    int i;
+    char pattern = convert_to_morse(digits);   //convert ones digit to morse
 
-//--------------------------------------------------------------------------------------------------
-//------------------------------MORSE CODE CONVERSION FOR 10's DIGIT--------------------------------
-//--------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------
+    //-------------------------------------MORSE CODE CONVERSION----------------------------------------
+    //--------------------------------------------------------------------------------------------------
 
-        for(i = 0; i < 5; i++){
-            int state_a = (pat_a << i) & 0b10000;
+    for(i = 0; i < 5; i++){
+        int state = (pattern << i) & 0b10000;
 
-            //SET RED LED STATE (short)
-            if(state_a == 0){
-                //LED ON
-                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_PIN_1);
+        //SET RED LED STATE (short)
+        if(state == 0){
+            //LED ON
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_PIN_1);
 
-                //SHORT DELAY
-                 for(ui32Loop = 0; ui32Loop < 1500000; ui32Loop++){}
+            //SHORT DELAY
+            for(ui32Loop = 0; ui32Loop < 1500000; ui32Loop++){}
 
-                //LED OFF
-                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0x0);
+            //LED OFF
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0x0);
             }
 
-            //SET BLUE LED STATE (long)
-            else if(state_a >= 1){
-                //LED ON
-                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
+        //SET BLUE LED STATE (long)
+        else if(state >= 1){
+            //LED ON
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
-                 //LONG DELAY
-                 for(ui32Loop = 0; ui32Loop < 3000000; ui32Loop++){}
+            //LONG DELAY
+            for(ui32Loop = 0; ui32Loop < 3000000; ui32Loop++){}
 
-                 //LED OFF
-                 GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0x0);
-                  }
-            //WAIT BETWEEN DIGITS (delay between each blink)
-            for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++){}
+            //LED OFF
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0x0);
         }
-
-        //WAIT BETWEEN NUMBERS
-        for(ui32Loop = 0; ui32Loop < 500000; ui32Loop++){}
-
-//--------------------------------------------------------------------------------------------------
-//------------------------------MORSE CODE CONVERSION FOR 1's DIGIT--------------------------------
-//--------------------------------------------------------------------------------------------------
-
-        for(i = 0; i < 5; i++){
-            int state_b = (pat_b << i) & 0b10000;
-
-             //SET RED LED STATE (short)
-             if(state_b == 0){
-                 //LED ON
-                 GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_PIN_1);
-
-                 //SHORT DELAY
-                 for(ui32Loop = 0; ui32Loop < 1500000; ui32Loop++){}
-
-                 //LED OFF
-                 GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0x0);
-               }
-
-                 //SET BLUE LED STATE (long)
-                 else if(state_b >= 1){
-                     //LED ON
-                     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-
-                      //LONG DELAY
-                      for(ui32Loop = 0; ui32Loop < 3000000; ui32Loop++){}
-
-                      //LED OFF
-                      GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0x0);
-                  }
-                  //WAIT BETWEEN DIGITS (delay between each blink)
-                  for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++){}
-           }
-           //LONG WAIT BETWEEN NUMBERS
-           for(ui32Loop = 0; ui32Loop < 1000000; ui32Loop++){}
-
+        //WAIT BETWEEN DIGITS (delay between each blink)
+        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++){}
     }
+    //LONG WAIT BETWEEN NUMBERS
+    for(ui32Loop = 0; ui32Loop < 1000000; ui32Loop++){}
 
-//--------------------------------------------------------------------------------------------------
-//--------------------------------ELSE CONDITION FOR SINGLE DIGIT-----------------------------------
-//--------------------------------------------------------------------------------------------------
-
-    else{
-        char pattern = convert_to_morse(n);
-
-        for(i = 0; i < 5; i++){
-
-            int state = (pattern << i) & 0b10000;
-
-            //SET RED LED STATE (short)
-            if(state == 0){
-                //LED ON
-                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_PIN_1);
-
-                //SHORT DELAY
-                for(ui32Loop = 0; ui32Loop < 1500000; ui32Loop++){}
-
-                //LED OFF
-                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0x0);
-            }
-
-            //SET BLUE LED STATE (long)
-            else if(state >= 1){
-                //LED ON
-                GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-
-                //LONG DELAY
-                for(ui32Loop = 0; ui32Loop < 3000000; ui32Loop++){}
-
-                 //LED OFF
-                 GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0x0);
-            }
-
-            //WAIT BETWEEN DIGITS (delay between each blink)
-            for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++){}
-        }
-
-        //LONG WAIT BETWEEN NUMBERS
-        for(ui32Loop = 0; ui32Loop < 1000000; ui32Loop++){}
-    }
-
+    return 0;
 }
-
 
 
 //Convert to morse code
@@ -220,3 +223,4 @@ char convert_to_morse(int n){
 
     return n;
 }
+
